@@ -5,7 +5,7 @@ body {
 }
 
 button {
-  background: #f7fffd;
+  background: #fbfff7;
   height: 30px;
   border: 1px solid #15644c;
   border-radius: 5px;
@@ -14,7 +14,7 @@ button {
 }
 
 .header {
-  background: #0c8561;
+  background: #5194a5;
   width: 100%;
   height: 50px;
   display: flex;
@@ -30,11 +30,11 @@ button {
 
 .form__input {
   position: relative;
-  background: #f7fffd;
+  background: #e2e1d3;
   padding: 0;
   height: 25px;
   width: 250px;
-  border: 1px solid #15644c;
+  border: 1px solid #152a64;
   border-radius: 5px;
 }
 
@@ -70,4 +70,45 @@ button {
   clip-path: inset(100%);
   clip: rect(0 0 0 0);
   overflow: hidden;
+}
+
+
+.info {
+  display: flex;
+  padding: 0 20;
+}
+.info-item {
+  font-family: inherit;
+  font-size: 12px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.photo-card {
+  text-align: center;
+  border-radius: 8px;
+  background-color: rgb(167, 165, 137);
+  width: 300px;
+}
+img {
+  width: 100%;
+  border-top-left-radius:8px;
+  border-top-right-radius: 8px;
+  object-fit: cover;
+}
+.gallery {
+  padding: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.load-more{
+  display: block;
+  background-color: #5194a5;
+  margin: 5px auto 10px;
+
+ 
 }
