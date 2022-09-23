@@ -31,6 +31,7 @@ function onSubmit(event) {
   clearMarkup(galleryEl);
 
   const searchValue = event.currentTarget[0].value;
+  console.log('searchValue', searchValue)
   mountData(searchValue);
 }
 
@@ -40,17 +41,19 @@ async function mountData(searchValue) {
 
     moreBtn.classList.remove("visually-hidden")
     moreBtn.addEventListener("click", () => {LoadMoreCards(searchValue)} );
+    
+    console.log('data.hits.length', data)
 
-    if (data.hits.length === 0) {
-      Notiflix.Notify.failure(
+    if (data.length === 0) {
+      return Notiflix.Notify.failure(        
         'Sorry, there are no images matching your search query. Please try again.'
-      );
-    }
+      );}
     data.hits.forEach(photo => {
       createCardMarkup(photo);
     });
     doLightbox();
   } catch (error) {
+    moreBtn.classList.add("visually-hidden")
     console.log('error', error);
   }
 }
