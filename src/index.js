@@ -1,37 +1,35 @@
 import './css/styles.css';
-import { BASE_URL, getPhoto, itemPerPage } from './api/webApi';
+import { BASE_URL, getPhoto } from './api/webApi';
 import Notiflix from 'notiflix';
-import SimpleLightbox from "simplelightbox";
-import "simplelightbox/dist/simple-lightbox.min.css";
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const galleryEl = document.querySelector('.gallery');
 const formEl = document.querySelector('#search-form');
-const moreBtn = document.querySelector('.load-more')
+const moreBtn = document.querySelector('.load-more');
+let page = 1;
 
-let page = 1
-const totalPages = Math.ceil(500/itemPerPage);
+const totalPages = Math.ceil(500 / 40);
 
 formEl.addEventListener('submit', onSubmit);
 
-
-async function LoadMoreCards(searchValue){
-  page +=1;
+async function loadMoreCards(searchValue) {
+  page += 1;
   const data = await getPhoto(searchValue, page);
-  data.hits.forEach(photo => {
-    createCardMarkup(photo);
-  });
-  if(page === totalPages){
-    moreBtn.classList.add("visually-hidden")
+  createGallaryMarkup(data.hits);
+
+  if (page === totalPages) {
+    moreBtn.classList.add('visually-hidden');
   }
   doLightbox();
 }
 
 function onSubmit(event) {
   event.preventDefault();
+
   clearMarkup(galleryEl);
 
   const searchValue = event.currentTarget[0].value;
-  console.log('searchValue', searchValue)
   mountData(searchValue);
 }
 
@@ -39,36 +37,34 @@ async function mountData(searchValue) {
   try {
     const data = await getPhoto(searchValue, page);
 
-    moreBtn.classList.remove("visually-hidden")
-    moreBtn.addEventListener("click", () => {LoadMoreCards(searchValue)} );
-    
-    console.log('data.hits.length', data)
+    moreBtn.classList.remove('visually-hidden');
+    moreBtn.addEventListener('click', () => {loadMoreCards(searchValue)});
 
-    if (data.length === 0) {
-      return Notiflix.Notify.failure(        
+    if (data.hits.length === 0) {
+      Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
-      );}
-    data.hits.forEach(photo => {
-      createCardMarkup(photo);
-    });
-    doLightbox();
+      );
+    } else Notiflix.Notify.info(`Hooray! We found ${data.totalHits} images.`);
+    createGallaryMarkup(data.hits);
   } catch (error) {
-    moreBtn.classList.add("visually-hidden")
+    moreBtn.classList.add('visually-hidden');
     console.log('error', error);
   }
+  doLightbox();
 }
 
-function createCardMarkup({
-  webformatURL,
-  largeImageURL,
-  tags,
-  likes,
-  views,
-  comments,
-  downloads,
-}) {
-  galleryEl.insertAdjacentHTML('beforeend',
-  `<div class="photo-card">
+function createGallaryMarkup(cardsArr) {
+  const markUp = cardsArr
+    .map(
+      ({
+        webformatURL,
+        largeImageURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads,
+      }) => `<div class="photo-card">
     <a class='link-img' href=${largeImageURL}><img src=${webformatURL} alt=${tags} loading="lazy" class="card-img" height="80%"/></a>
   <div class="info">
     <p class="info-item">
@@ -85,7 +81,9 @@ function createCardMarkup({
     </p>
   </div>
 </div>`
-  );
+    )
+    .join('');
+  galleryEl.insertAdjacentHTML('beforeend', markUp);
 }
 
 function doLightbox() {
@@ -101,8 +99,6 @@ function doLightbox() {
   });
 }
 
-function clearMarkup(element){
+function clearMarkup(element) {
   element.innerHTML = '';
 }
-
-
